@@ -18,6 +18,10 @@ CURRENT_DIRNAME=File.expand_path(File.dirname($*[0]))
 CORES=Etc.nprocessors
 
 
+IS_RUST = CURRENT_FILE.end_with? ".rs"
+IS_CPP =  CPP_EXT.include? File.extname(CURRENT_FILE)
+
+
 def find_project_root(dir)
     return nil if dir == '/'
     if File.directory?(dir+"/.git")
@@ -33,7 +37,7 @@ def find_project_root(dir)
     if File.file?(dir+"/Rakefile")
         return dir
     end
-    if File.file?(dir+"/Cargo.toml")
+    if File.file?(dir+"/Cargo.toml") && IS_RUST
         return dir
     end
     parent = File.dirname(dir)
@@ -47,6 +51,15 @@ PROJECT_ROOT = find_project_root(CURRENT_DIRNAME)
 
 
 if PROJECT_ROOT.nil?
+    if IS_CPP
+        content = File.read(CURRENT_FILE)
+        if content =~ /^int main\(/
+            cxx = ENV["CXX"] || "g++"
+            spawn(cxx, "-Wall", "-Wextra", "-O2", CURRENT_FILE, "-o", File.basename(CURRENT_FILE, ".*"))
+            return
+        end
+    end
+
     puts "Can't find project root. It should have a build directory!"
     exit 1
 end
