@@ -16,6 +16,7 @@ Install required packages
 Install rust
 
     $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    $ source "$HOME/.cargo/env"
     $ rustup component add rust-analyzer
 
 Install neovim and neovide
