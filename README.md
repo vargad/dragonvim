@@ -35,6 +35,7 @@ Clone DragonVim repository to a directory:
 Create symlinks to the configuration files you want to use, or just run my
 install.sh script, which creates symlinks (or updates exsiting symlinks):
 
+    $ cd dragonvim
     $ ./install.sh
 
 Make sure all plugins are installed
